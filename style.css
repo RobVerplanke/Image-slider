@@ -1,0 +1,47 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+
+#holder{
+    display: flex;
+    justify-content: center;
+    outline: 1px solid blue;
+}
+
+.nav-arrow{
+    align-items: center;
+    display: flex;
+    background-color: rgb(230, 230, 230);
+}
+
+#carousel{
+    display: flex;
+    /* overflow: hidden; */
+    height: 100px;
+    width: 100px;
+    outline: 1px solid green;
+}
+
+#image-holder{
+    display: flex;
+    justify-content: space-between;
+
+    width: 800px;
+    height: 100px;
+    outline: 1px solid red;
+}
+
+.slide{
+    width: 100px;
+    height: 100px;
+}
