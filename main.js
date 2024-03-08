@@ -7,46 +7,68 @@ const cssRule = styleSheet.cssRules[ruleIndex];
 
 const navDots = document.querySelectorAll('.nav-dot');
 
-let transformValue = 0;
+let intervalId;
+let translateValue = 0;
+const interval = 5000; // ms
 
 
-// Add event listeners to navigation arrows
+// Start auto scroll
+intervalId = setInterval(autoSlide, interval);
+
+
+// Add event listeners to navigation
 
 // move slide holder to right
 navArrowLeft.addEventListener('click', () => {
-    if (transformValue != 0){
-        transformValue += 100;
-        cssRule.style.transform = 'translate(' + transformValue + 'px)';
-        resetDots();
-        navDots[transformValue / -100].innerHTML = '&#x2022;';
+    if (translateValue === 0) translateValue = -600;
+    if (translateValue != 0) {
+        moveSlide(+100);
+        clearInterval(intervalId);  // Reset timer
+        intervalId = setInterval(autoSlide, interval); // Start over autoscroll
     }
 });
 
 // move slide holder to left
 navArrowRight.addEventListener('click', () => {
-    if (transformValue != -500){
-        transformValue -= 100;
-        cssRule.style.transform = 'translate(' + transformValue + 'px)';
-        resetDots();
-        navDots[transformValue / -100].innerHTML = '&#x2022;';
+    if (translateValue === -500) translateValue = 100;
+    if (translateValue != -500) {
+        moveSlide(-100);
+        clearInterval(intervalId);
+        intervalId = setInterval(autoSlide, interval);
     }
 });
 
 
 // Use navigation dots to move slide holder to corresponding slide
-
 navDots.forEach((dot, index) => {
     dot.addEventListener('click', () => {
-        const translateValue = index * -100;
-        resetDots();
-        cssRule.style.transform = 'translate(' + translateValue + 'px)';
-        transformValue = translateValue;
-        fillDot(dot);
-    })
-})
+        const currentPos = index * -100;
+        resetDots(); // Unfill all dots
+        fillDot(dot); // Fill selected dot
+        cssRule.style.transform = 'translate(' + currentPos + 'px)'; // Update translate value
+        translateValue = currentPos; // Update slide holder position
+        clearInterval(intervalId);
+        intervalId = setInterval(autoSlide, interval);
+    });
+});
 
 
-// Fill dot after selection
+// Move slide holder to left/right (+ or - 100px)
+function moveSlide(step){
+    translateValue += step;
+
+    // Set position boundries
+    if (translateValue <= -600 || translateValue >= 0) translateValue = 0;
+    
+    // Update translate value
+    cssRule.style.transform = 'translate(' + translateValue + 'px)';
+    
+    // Update navigation dots
+    resetDots();
+    navDots[translateValue / -100].innerHTML = '&#x2022;';
+}
+
+// Fill/unfill navigation dots
 
 function fillDot(dot){
     dot.innerHTML = '&#x2022;';
@@ -58,4 +80,8 @@ function resetDots(){
     })
 }
 
-// Auto scroll after 5 seconds
+// Auto scroll every 5 seconds
+
+function autoSlide() {
+    moveSlide(-100);
+}

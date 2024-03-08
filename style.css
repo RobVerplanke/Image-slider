@@ -33,7 +33,7 @@ body{
 
 #carousel{
     display: flex;
-    /* overflow: hidden; */
+    overflow: hidden;
     height: 100px;
     width: 100px;
 }
