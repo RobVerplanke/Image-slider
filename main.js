@@ -1,16 +1,11 @@
 const navArrowLeft = document.querySelector('#nav-arrow-left');
 const navArrowRight = document.querySelector('#nav-arrow-right');
 
-const image1 = document.querySelector('#nav-img-1');
-const image2 = document.querySelector('#nav-img-2');
-const image3 = document.querySelector('#nav-img-3');
-const image4 = document.querySelector('#nav-img-4');
-const image5 = document.querySelector('#nav-img-5');
-const image6 = document.querySelector('#nav-img-6');
-
 const styleSheet = document.styleSheets[0];
 const ruleIndex = Array.from(styleSheet.cssRules).findIndex(rule => rule.selectorText === '#slide-holder');
 const cssRule = styleSheet.cssRules[ruleIndex];
+
+const navDots = document.querySelectorAll('.nav-dot');
 
 let transformValue = 0;
 
@@ -22,6 +17,8 @@ navArrowLeft.addEventListener('click', () => {
     if (transformValue != 0){
         transformValue += 100;
         cssRule.style.transform = 'translate(' + transformValue + 'px)';
+        resetDots();
+        navDots[transformValue / -100].innerHTML = '&#x2022;';
     }
 });
 
@@ -30,35 +27,35 @@ navArrowRight.addEventListener('click', () => {
     if (transformValue != -500){
         transformValue -= 100;
         cssRule.style.transform = 'translate(' + transformValue + 'px)';
+        resetDots();
+        navDots[transformValue / -100].innerHTML = '&#x2022;';
     }
 });
 
 
 // Use navigation dots to move slide holder to corresponding slide
 
-image1.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(0px)';
-});
+navDots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        const translateValue = index * -100;
+        resetDots();
+        cssRule.style.transform = 'translate(' + translateValue + 'px)';
+        transformValue = translateValue;
+        fillDot(dot);
+    })
+})
 
-image2.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(-100px)';
-});
 
-image3.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(-200px)';
-});
+// Fill dot after selection
 
-image4.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(-300px)';
-});
+function fillDot(dot){
+    dot.innerHTML = '&#x2022;';
+}
 
-image5.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(-400px)';
-});
-
-image6.addEventListener('click', () => {
-    cssRule.style.transform = 'translate(-500px)';
-});
-
+function resetDots(){
+    navDots.forEach((dot) => {
+        dot.innerHTML = '&#x26AC;';
+    })
+}
 
 // Auto scroll after 5 seconds
