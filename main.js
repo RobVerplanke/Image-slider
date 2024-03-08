@@ -11,7 +11,6 @@ let intervalId;
 let translateValue = 0;
 const interval = 5000; // ms
 
-
 // Start auto scroll
 intervalId = setInterval(autoSlide, interval);
 
@@ -20,7 +19,7 @@ intervalId = setInterval(autoSlide, interval);
 
 // move slide holder to right
 navArrowLeft.addEventListener('click', () => {
-    if (translateValue === 0) translateValue = -600;
+    if (translateValue === 0) translateValue = -600; // Skip to last slide if position is out of boundry
     if (translateValue != 0) {
         moveSlide(+100);
         clearInterval(intervalId);  // Reset timer
@@ -30,7 +29,7 @@ navArrowLeft.addEventListener('click', () => {
 
 // move slide holder to left
 navArrowRight.addEventListener('click', () => {
-    if (translateValue === -500) translateValue = 100;
+    if (translateValue === -500) translateValue = 100; // Skip to first slide if position is out of boundry
     if (translateValue != -500) {
         moveSlide(-100);
         clearInterval(intervalId);
@@ -42,7 +41,7 @@ navArrowRight.addEventListener('click', () => {
 // Use navigation dots to move slide holder to corresponding slide
 navDots.forEach((dot, index) => {
     dot.addEventListener('click', () => {
-        const currentPos = index * -100;
+        const currentPos = index * -100; // Get index of current dot and convert it to a 'translate value' 
         resetDots(); // Unfill all dots
         fillDot(dot); // Fill selected dot
         cssRule.style.transform = 'translate(' + currentPos + 'px)'; // Update translate value
@@ -57,19 +56,18 @@ navDots.forEach((dot, index) => {
 function moveSlide(step){
     translateValue += step;
 
-    // Set position boundries
-    if (translateValue <= -600 || translateValue >= 0) translateValue = 0;
+    // Set slide holder boundry (6 slides of 100px wide)
+    if (translateValue <= -600) translateValue = 0;
     
     // Update translate value
     cssRule.style.transform = 'translate(' + translateValue + 'px)';
     
-    // Update navigation dots
+    // Update navigation dots using the translate value as index (divided by 100) of the navDots array
     resetDots();
     navDots[translateValue / -100].innerHTML = '&#x2022;';
 }
 
 // Fill/unfill navigation dots
-
 function fillDot(dot){
     dot.innerHTML = '&#x2022;';
 }
@@ -80,8 +78,8 @@ function resetDots(){
     })
 }
 
-// Auto scroll every 5 seconds
 
+// Auto scroll every 5 seconds
 function autoSlide() {
     moveSlide(-100);
 }
